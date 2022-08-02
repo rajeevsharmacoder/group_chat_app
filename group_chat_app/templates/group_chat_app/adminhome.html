@@ -1,0 +1,116 @@
+{% extends 'layout.html' %}
+{% block head %}
+{% endblock %}
+{% block body %}
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+<h2>Welcome {{ user.first_name }}!</h2>
+<h3>Users</h3>
+<a href="{% url 'group_chat_app:adduser' %}">Add User?</a>
+<br/><br/>
+<table>
+    <tr>
+        <th>
+            Username
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            First Name
+        </th>
+        <th>
+            Last Name
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>
+            <a href="{% url 'group_chat_app:userinfo' user.username %}">{{user.username}}</a>
+        </td>
+        <td>
+            {{ user.email }}
+        </td>
+        <td>
+            {{ user.first_name }}
+        </td>
+        <td>
+            {{ user.last_name }}
+        </td>
+        <td>
+            <table>
+                <tr>
+                    <td>
+                        <a href="{% url 'group_chat_app:updateuser' user.username %} " role="button">Edit</a>
+                    </td>
+                    {% if user.is_staff and user == request.user %}
+                    <td>Cannot Delete Self</td>
+                    {% else %}
+                    <td>
+                        <form action="{% url 'group_chat_app:deleteuser' user.username %}" method="POST">
+                            {% csrf_token %}
+                            <input type=submit value="Delete" />
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">
+            <p>No users</p>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<br/><br/>
+<h3>Groups</h3>
+<a href="{% url 'group_chat_app:creategroup' user.username %}">Create Group?</a>
+<br/><br/>
+<table>
+    <tr>
+        <th>
+            Group Name
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+    {% for group in groups %}
+    <tr>
+        <td>
+            <a href="{% url 'group_chat_app:viewgroupmessages' group.name %}">{{ group.name }}</a>
+        </td>
+        <td>
+            <table>
+                <tr>
+                    <td>
+                        <a href="{% url 'group_chat_app:viewgroup' group.name %}">Edit</a>
+                    </td>
+                    <td>
+                        <form action="{% url 'group_chat_app:deletegroup' group.name request.user.username %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Delete" />
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="1">
+            <p>No groups</p>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<br/><br/>
+<a href="{% url 'group_chat_app:adminlogout' %}">Admin Logout</a>
+{% endblock %}

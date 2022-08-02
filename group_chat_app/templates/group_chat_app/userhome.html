@@ -1,0 +1,103 @@
+{% extends 'layout.html' %}
+{% block head %}
+{% endblock %}
+{% block body %}
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+<h2>Welcome {{ user.first_name }}!</h2>
+<h3>Users</h3>
+<table>
+    <tr>
+        <th>
+            Username
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            First Name
+        </th>
+        <th>
+            Last Name
+        </th>
+        <th>
+            Is Admin?
+        </th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>
+            {{user.username}}
+        </td>
+        <td>
+            {{ user.email }}
+        </td>
+        <td>
+            {{ user.first_name }}
+        </td>
+        <td>
+            {{ user.last_name }}
+        </td>
+        <td>
+            {% if user.is_staff == True %}
+            Yes
+            {% else %}
+            No
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">
+            <p>No users</p>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<br/><br/>
+<h3>Groups</h3>
+<a href="{% url 'group_chat_app:creategroup' user.username %}">Create Group?</a>
+<br/><br/>
+<table>
+    <tr>
+        <th>
+            Group Name
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+    {% for group in groups %}
+    <tr>
+        <td>
+            <a href="{% url 'group_chat_app:viewgroupmessages' group.name %}">{{ group.name }}</a>
+        </td>
+        <td>
+            <table>
+                <tr>
+                    <td>
+                        <a href="{% url 'group_chat_app:viewgroup' group.name %}">Edit</a>
+                    </td>
+                    <td>
+                        <form action="{% url 'group_chat_app:deletegroup' group.name request.user.username %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Delete" />
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="1">
+            <p>No groups</p>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<br/><br/>
+<a href="{% url 'group_chat_app:userlogout' %}">User Logout</a>
+<br/><br/>
+{% endblock %}

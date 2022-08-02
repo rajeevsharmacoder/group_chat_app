@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% block head %}
+<script type="text/javascript">
+    function toggle_like() {
+        anchor_=document.getElementById("like_dislike")
+        if(anchor_.value === "Like") {
+            anchor_.value = "Dislike";
+        }
+        else {
+            anchor_.value = "Like";
+        }
+    }
+</script>
+{% endblock %}
+{% block body %}
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+<h2>Group Messages</h2>
+<h4>Group Name: {{ groupname }}</h4>
+{% if request.user.is_staff %}
+<a href="{% url 'group_chat_app:adminhome' %}">Back</a>
+{% else %}
+<a href="{% url 'group_chat_app:userhome' %}">Back</a>
+{% endif %}
+<br/><br/><br/>
+<form action="{% url 'group_chat_app:viewgroupmessages' groupname %}" method="post">
+    {% csrf_token %}
+    <input type="textarea" name="mymessage" id="mymessage" placeholder="Enter your message here!" />
+    <input type="submit" value="Send" />
+</form>
+<br/>
+{% for groupmessage in groupmessages %}
+<div>
+    <p><b>{{ groupmessage.user_name }}</b>: {{ groupmessage.message_text }}</p>
+    <label>{{ groupmessage.created_at }}</label><br/>
+    <label>Likes: {{ groupmessage.likes }}</label>
+    <label>Dislikes: {{ groupmessage.dislikes }}</label>
+    <form action="{% url 'group_chat_app:like' groupmessage.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" name="like" id="like" value="Like"/>
+    </form>
+    <form action="{% url 'group_chat_app:dislike' groupmessage.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" name="dislike" id="dislike" value="Dislike"/>
+    </form>
+</div>
+{% empty %}
+<p>No messages yet!</p>
+{% endfor %}
+{% endblock %}

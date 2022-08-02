@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% block head %}
+{% endblock %}
+{% block body %}
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+<h2>Add User</h2>
+<form action="{% url 'group_chat_app:adduser' %}" method="post">
+    {% csrf_token %}
+    <label>First Name: </label>
+    {% if data.firstname %}
+    <input type="text" name="firstname" id="firstname" value="{{ data.firstname }}" required /><br/>
+    {% else %}
+    <input type="text" name="firstname" id="firstname" placeholder="Enter First Name" required /><br/>
+    {% endif %}
+    <label>Last Name: </label>
+    {% if data.lastname %}
+    <input type="text" name="lastname" id="lastname" value="{{ data.lastname }}" required /><br/>
+    {% else %}
+    <input type="text" name="lastname" id="lastname" placeholder="Enter Last Name" required /><br/>
+    {% endif %}
+    <label>Email: </label>
+    {% if data.email %}
+    <input type="email" name="email" id="email" value="{{ data.email }}" required /><br/>
+    {% else %}
+    <input type="email" name="email" id="email" placeholder="Enter Email" required /><br/>
+    {% endif %}
+    <label>Username: </label>
+    {% if data.username %}
+    <input type="text" name="username" id="username" value="{{ data.username }}" required /><br/>
+    {% else %}
+    <input type="text" name="username" id="username" placeholder="Enter Username" required /><br/>
+    {% endif %}
+    <label>Password: </label>
+    {% if data.password %}
+    <input type="password" name="password" id="password" value="{{ data.password }}" required /><br/>
+    {% else %}
+    <input type="password" name="password" id="password" placeholder="Enter Password" required /><br/>
+    {% endif %}
+    <label>Is Admin?: </label>
+    {% if data.is_staff %}
+    <input type="checkbox" name="is_staff" id="is_staff" value="True" checked/><br/><br/>
+    {% else %}
+    <input type="checkbox" name="is_staff" id="is_staff" value="True" /><br/><br/>
+    {% endif %}
+    <input type="submit" value="Add User" />
+</form>
+<br/>
+<a href="{% url 'group_chat_app:adminhome' %}">Back</a>
+{% endblock %}

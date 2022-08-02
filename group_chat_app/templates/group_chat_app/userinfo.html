@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% block head %}
+{% endblock %}
+{% block body %}
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+<h2>User Info</h2>
+<h4>Username: {{ user.username }}</h4>
+<h4>First Name: {{ user.first_name }}</h4>
+<h4>Last Name: {{ user.last_name }}</h4>
+<h4>Email: {{ user.email }}</h4>
+{% if user.is_staff %}
+<h4>Is Admin?: Yes</h4>
+{% else %}
+<h4>Is Admin?: No</h4>
+{% endif %}
+<a href="{% url 'group_chat_app:updateuser' user.username %} " role="button">Edit</a>
+<br/><br/>
+<form action="{% url 'group_chat_app:deleteuser' user.username %}" method="POST">
+    {% csrf_token %}
+    <input type=submit value="Delete" />
+</form>
+<br/>
+<a href="{% url 'group_chat_app:adminhome' %}">Back</a>
+{% endblock %}

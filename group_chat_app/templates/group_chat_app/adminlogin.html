@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block head %}
+{% endblock %}
+{% block body %}
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+<form action="{% url 'group_chat_app:adminlogin' %}" method="post">
+    {% csrf_token %}
+    <label>Username: </label>
+    <input type="text" name="adminusername" id="adminusername" placeholder="Admin Username" required /><br/>
+    <label>Password: </label>
+    <input type="password" name="adminpassword" id="adminpassword" placeholder="Admin Password" required /><br/>
+    <input type="submit" value="Admin Login" />
+</form>
+<a href="{% url 'group_chat_app:userlogin' %}">Back</a>
+{% endblock %}

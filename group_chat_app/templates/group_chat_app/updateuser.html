@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+{% block head %}
+{% endblock %}
+{% block body %}
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+<h2>Update User</h2>
+{% if data %}
+<form action="{% url 'group_chat_app:updateuser' data.username %}" method="post">
+    {% csrf_token %}
+    <label>First Name: </label>
+    <input type="text" name="firstname" id="firstname" value="{{ data.first_name }}" required /><br/>
+    <label>Last Name: </label>
+    <input type="text" name="lastname" id="lastname" value="{{ data.last_name }}" required /><br/>
+    <label>Email: </label>
+    <input type="email" name="email" id="email" value="{{ data.email }}" required /><br/>
+    <label>Username: </label>
+    <input type="text" name="username" id="username" value="{{ data.username }}" required disabled/><br/>
+    <label>Password: </label>
+    <input type="password" name="password" id="password" value="{{ data.password }}" required /><br/>
+    <label>Is Admin?: </label>
+    {% if data.is_staff and data == request.user %}
+    <p>Cannot modify self's admin priviledges.</p>
+    {% elif data.is_staff == True %}
+    <input type="checkbox" name="is_staff" id="is_staff" value=True checked/><br/><br/>
+    {% else %}
+    <input type="checkbox" name="is_staff" id="is_staff" value=True /><br/><br/>
+    {% endif %}
+    <input type="submit" value="Update User" />
+</form>
+{% endif %}
+<br/>
+<a href="{% url 'group_chat_app:userinfo' data.username %}">Back</a>
+{% endblock %}

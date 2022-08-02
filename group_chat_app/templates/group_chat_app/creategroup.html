@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block head %}
+{% endblock %}
+{% block body %}
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+<h2>Create Group</h2>
+<form action="{% url 'group_chat_app:creategroup' user.username %}" method="post">
+    {% csrf_token %}
+    <label>Group Name: </label>
+    {% if group.name %}
+    <input type="text" name="groupname" id="groupname" value="{{ group.name }}" required /><br/>
+    {% else %}
+    <input type="text" name="groupname" id="groupname" placeholder="Enter Group Name" required /><br/>
+    {% endif %}
+    <input type="submit" value="Create Group" />
+</form>
+{% if request.user.is_staff %}
+<a href="{% url 'group_chat_app:adminhome' %}">Back</a>
+{% else %}
+<a href="{% url 'group_chat_app:userhome' %}">Back</a>
+{% endif %}
+{% endblock %}
